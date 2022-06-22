@@ -57,7 +57,7 @@ namespace biometria_proj_2
         {
             facemark = new(facemarkLBFParams);
             //pass absolute path
-            facemark.LoadModel(@"lbfmodel.yaml");
+            facemark.LoadModel(@"./lbfmodel.yaml");
 
             if (comboBox.SelectedItem != null)
             {
