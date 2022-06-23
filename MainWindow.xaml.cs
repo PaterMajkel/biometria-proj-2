@@ -83,8 +83,6 @@ namespace biometria_proj_2
             Image<Bgr, byte> grayScale = bitmap.ToImage<Bgr, byte>();
             //scaling options
             System.Drawing.Rectangle[] rectangles = faceClassifier.DetectMultiScale(grayScale, 1.1, 3);
-            foreach (System.Drawing.Rectangle rectangle in rectangles)
-            {
                 System.Drawing.Rectangle[] eyes = eyeClassifier.DetectMultiScale(grayScale, 1.1, 3);
                 foreach (System.Drawing.Rectangle eye in eyes)
 
@@ -96,11 +94,10 @@ namespace biometria_proj_2
 
                         }
                     }
-
-            }
             VectorOfVectorOfPointF landmarks = new();
             VectorOfRect rects = new(rectangles);
             bool sleepyBoy = false;
+            //var bitImg = bitmap.ToImage<Bgr, byte>();
             if (facemark.Fit(grayScale, rects, landmarks))
             {
                 for (int i = 0; i < rectangles.Length; i++)
@@ -111,8 +108,10 @@ namespace biometria_proj_2
                     var leftEyePoints = x[i].Skip(36).Take(6);
                     var rightEyePoints = x[i].Skip(42).Take(6);
                     sleepyBoy = Eye_Aspect_Ratio(leftEyePoints.ToArray()) <0.22 && Eye_Aspect_Ratio(rightEyePoints.ToArray()) < 0.22;
+                    //FaceInvoke.DrawFacemarks(bitImg, landmarks[i], new MCvScalar(255, 255, 255));
                 }
             }
+            //bitmap = bitImg.ToBitmap();
             Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 VideoStream.Source = Convert(bitmap);
